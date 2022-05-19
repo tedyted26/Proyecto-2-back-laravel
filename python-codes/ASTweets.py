@@ -1,5 +1,4 @@
 #External Imports
-from ctypes import sizeof
 from textblob import TextBlob
 from deep_translator import GoogleTranslator
 import tweepy
