@@ -1,15 +1,12 @@
 #External Imports
-#import tweepy
+from ctypes import sizeof
 from textblob import TextBlob
-from flask import jsonify, make_response
-import datetime
+from deep_translator import GoogleTranslator
+import tweepy
+from datetime import date, timedelta
 
-#Internal Imports
-#from tweepy import OAuthHandler
 
-# No usamos twitter de momento
-'''
-def twitter_data_access():
+def extractTweets(busqueda):
     consumer_key = "K5CQ385KRpL8nlsHnoLpqcyaT"
     consumer_secret = "VZkRXTLwjE3KOcl0BAMdlwprPBtWpIB5bWN8HjjuVKqmrN4pEo"
     access_token = "1448336514455330827-LoK6OnU8sUpjW3HzwlNH25E0rap1NY"
@@ -19,53 +16,39 @@ def twitter_data_access():
     auth = tweepy.AppAuthHandler(consumer_key, consumer_secret)
     api = tweepy.API(auth)
 
-    listaTweets = tweepy.Cursor(api.search_tweets, q='ucrania -filter:retweets').items(50)
+    listaTweets = tweepy.Cursor(api.search_tweets, q=f'{busqueda} -filter:retweets').items(100)
     listatextos = []
+
+    fechaAyer = date.today() - timedelta(days=1)
+    contador = 0
+
+    totalMg = 0
+    totalRt = 0
+
     for tweet in listaTweets:
-        print(tweet.text)
-        status = api.get_status(tweet.id, tweet_mode="extended")
+        contador += 1
+        print(str(contador)+": "+str(tweet.created_at.date()))
+        #print(tweet.text)
+        '''
         try:
-            listatextos.append(status.retweeted_status.full_text)
-        except AttributeError:  # Not a Retweet
-            listatextos.append(status.full_text)
-        
-    return listatextos
-'''
+            print(tweet.retweet_count)
+            print(tweet.favorite_count)
+        except:
+            None
+        '''
 
-def preprocessing_input_user(text_to_process):
-    texto = TextBlob(text_to_process)
-    traduccion = TextBlob(str(texto.translate(to='en')))
-    polaridadTotal = 0
-    if (traduccion.sentiment[0]>0):
-        polaridadTotal = polaridadTotal+traduccion.sentiment[0]
-        text_object = {
-                
-                "polaridad":polaridadTotal,
-                "type_text": "positivo",
-            }
+        if tweet.created_at.date() >= fechaAyer:
+            totalMg += tweet.favorite_count
+            totalRt += tweet.retweet_count
+            status = api.get_status(tweet.id, tweet_mode="extended")
+            try:
+                listatextos.append(status.retweeted_status.full_text)
+            except AttributeError:  # Not a Retweet
+                listatextos.append(status.full_text)
     
-    elif (traduccion.sentiment[0]<0):
-        polaridadTotal = polaridadTotal+traduccion.sentiment[0]
-        text_object = {
-                
-                
-                "polaridad":polaridadTotal,
-                "type_text": "negativo",
-            }
+    return listatextos, totalMg, totalRt
 
-    elif (traduccion.sentiment[0]==0):
-        polaridadTotal = polaridadTotal+traduccion.sentiment[0]
-        text_object = {
-
-                "polaridad":polaridadTotal,
-                "type_text": "neutro",
-            }
-    print(text_object)
-    return jsonify(text_object)
-
-
-'''
-def preprocessing(list_of_text):
+def calculoSent(list_of_text, totalMg, totalRt, busqueda):
     polaridadTotal = 0
     positivos = 0
     negativos = 0
@@ -73,41 +56,35 @@ def preprocessing(list_of_text):
 
     list_objects = []
     id = 0
+    cont = 0
     for tweet in list_of_text:
+        cont += 1
         try:
             id += 1
-            texto = TextBlob(tweet)
-            traduccion = TextBlob(str(texto.translate(to='en')))
-            print(traduccion.words)
-            if (traduccion.sentiment[0]>0):
-                positivos += 1
-                tweet_object = {
+            translated = GoogleTranslator(source='auto', target='en').translate(tweet)
+            traduccion = TextBlob(translated)
+            #print(traduccion.words)
+            sentimiento = traduccion.sentiment[0]
+            '''
+            tweet_object = {
                 'id':id,
-                "texto":texto,
+                "texto":tweet,
                 "traduccion":traduccion,
-                'type_tweet': "positivo"
+                'sentimiento':sentimiento
             }
-                polaridadTotal = polaridadTotal+traduccion.sentiment[0]
-            elif (traduccion.sentiment[0]<0):
-                negativos += 1
-                tweet_object = {
-                'id':id,
-                "texto":texto,
-                "traduccion":traduccion,
-                'type_tweet': "negativo"
-            }
-                polaridadTotal = polaridadTotal+traduccion.sentiment[0]
-            elif (traduccion.sentiment[0]==0):
+            '''
+            polaridadTotal = polaridadTotal+sentimiento
+            
+            if sentimiento == 0:
                 neutros += 1
-                tweet_object = {
-                'id':id,
-                "texto":texto,
-                "traduccion":traduccion,
-                'type_tweet':"neutro"
-            }
-            list_objects.append(str(tweet_object))
+            elif sentimiento > 0:
+                positivos += 1
+            elif sentimiento < 0:
+                negativos += 1
+                
+            #list_objects.append(str(tweet_object))
              
-            print(traduccion.sentiment[0])
+            print(str(cont)+": "+str(sentimiento))
             
         except:
             print("Error de traducción")
@@ -115,10 +92,25 @@ def preprocessing(list_of_text):
             
 
     print("Suma de polaridades: "+str(polaridadTotal))
-    print("Polaridad media: "+str(polaridadTotal/(positivos+negativos)))
+    print("Polaridad media: "+str(polaridadTotal/(negativos+positivos)))
     print("Tweets negativos: " + str(negativos))
     print("Tweets positivos: " + str(positivos))
     print("Tweets neutros: " + str(neutros))
+
+    resultados = {
+                "busqueda": busqueda,
+                'tweetsAnalizados':len(list_of_text),
+                "polaridadMedia":polaridadTotal/(negativos+positivos),
+                "positivos":positivos,
+                'negativos':negativos,
+                "neutros": neutros,
+                "totalMg": totalMg,
+                "totalRt": totalRt
+            }
     
-    return jsonify(list_objects)
-'''
+    return resultados
+
+def sentimientoTweets(busqueda):
+    tweets, totalMg, totalRt = extractTweets(busqueda)
+    listaTweets = calculoSent(tweets, totalMg, totalRt, busqueda)
+    return str(listaTweets)
