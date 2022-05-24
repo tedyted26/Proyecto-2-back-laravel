@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Busquedas;
+use App\Models\Noticias;
 
 class BusquedasController extends Controller
 {
@@ -15,6 +16,38 @@ class BusquedasController extends Controller
     public function index()
     {
         return Busquedas::orderBy('created_at', 'asc')->get();
+    }
+
+    /**
+     * Dado un texto, devuelve la busqueda encontrada
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function getSearch(Request $request){
+        $out = new \Symfony\Component\Console\Output\ConsoleOutput();
+        $textoBuscado = $request->input('texto');
+
+        $busqueda_q = Busquedas::select('*')->where("lugar", $textoBuscado)->first();
+
+        if(!empty($busqueda_q)){
+            $id_busqueda = $busqueda_q->id;
+            $out->writeln($id_busqueda);
+
+            $noticias_json = Noticias::select('id','url', 'titulo', 'subtitulo', 'fecha_noticia')
+            ->where("busquedas_id", $id_busqueda)->get()->toJson();
+
+            $out->writeln(gettype($noticias_json));
+            return $noticias_json;
+        }
+        else{
+            return response()->json(["Error" => "No hay coincidencias"]);
+        }
+        /*
+        if(!empty($request->input('texto'))){
+            $query->where('lugar', '=', $request->input('texto'));
+            $out->writeln($query);
+        }*/
     }
 
     /**

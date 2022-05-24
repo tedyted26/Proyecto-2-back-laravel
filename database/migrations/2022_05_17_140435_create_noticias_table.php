@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string("titulo");
             $table->string("subtitulo");
             $table->date("fecha_noticia");
+            $table->integer("resultado");
             $table->foreignId("busquedas_id")->constrained("busquedas");
             $table->timestamps();
         });

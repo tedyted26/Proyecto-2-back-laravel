@@ -16,6 +16,11 @@ class AdminsController extends Controller
     {
         return Admins::orderBy('created_at', 'asc')->get();
     }
+    public function index2(Request $request)
+    {
+        $out = new \Symfony\Component\Console\Output\ConsoleOutput();
+        return response()->json(Admins::orderBy('created_at', 'asc')->get());
+    }
 
     /**
      * Show the form for creating a new resource.
