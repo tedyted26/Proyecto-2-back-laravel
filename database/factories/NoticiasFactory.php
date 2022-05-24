@@ -16,11 +16,13 @@ class NoticiasFactory extends Factory
      */
     public function definition()
     {
+        
         return [
             "url"=>$this->faker->url,
             "titulo"=>$this->faker->word,
             "subtitulo"=>$this->faker->sentence,
             "fecha_noticia"=>$this->faker->date,
+            "resultado"=>$this->faker->randomElement([-1, 0, 1]),
             "busquedas_id"=>\App\Models\Busquedas::inRandomOrder()->first()->id
         ];
     }
