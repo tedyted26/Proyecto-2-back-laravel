@@ -1,11 +1,11 @@
 
 #External Imports
 from flask import Flask, request, jsonify
-from textblob import TextBlob
+#from textblob import TextBlob
 from flask_cors import CORS, cross_origin
 
 #Internal Imports
-from helpers import *
+from ASTweets import *
 
 app = Flask(__name__)
 CORS(app)
@@ -19,8 +19,8 @@ def sentiment_analysis():
     if request.method == 'POST':
         text_input_user = request.json["texto"]
         print(f"Recibido texto: {text_input_user}")
-        text = preprocessing_input_user(text_input_user)
-        return text
+        listaTweets = sentimientoTweets(text_input_user)
+        return listaTweets
     else:
         print("\n\nNo es post\n\n")
         return None
