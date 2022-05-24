@@ -18,6 +18,31 @@ class BusquedasController extends Controller
     }
 
     /**
+     * Dado un texto, devuelve la busqueda encontrada
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function getSearch(Request $request){
+        $out = new \Symfony\Component\Console\Output\ConsoleOutput();
+        $textoBuscado = $request->input('texto');
+        $query = Busquedas::select('*')->where("lugar", $textoBuscado)->first();
+        
+        if(!empty($query)){
+            return $query;
+        }
+        else{
+            return response()->json(["Error" => "No hay coincidencias"]);
+        }
+        /*
+        if(!empty($request->input('texto'))){
+            $query->where('lugar', '=', $request->input('texto'));
+            $out->writeln($query);
+        }*/
+        return $query;
+    }
+
+    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response

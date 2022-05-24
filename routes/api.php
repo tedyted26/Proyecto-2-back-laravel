@@ -20,10 +20,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('admins', $ruta_controllers.'AdminsController@index');
+Route::post('admins', $ruta_controllers.'AdminsController@index2');
 Route::get('admins/{id}', $ruta_controllers.'AdminsController@show');
+Route::post('busquedas', $ruta_controllers.'BusquedasController@getSearch');
 Route::get('busquedas', $ruta_controllers.'BusquedasController@index');
 Route::get('busquedas/{id}', $ruta_controllers.'BusquedasController@show');
-Route::get('noticias', $ruta_controllers.'NoticiasController@index');
-Route::get('noticias/{id}', $ruta_controllers.'NoticiasController@show');
-Route::get('twitter', $ruta_controllers.'TwitterController@index');
-Route::get('twitter/{id}', $ruta_controllers.'TwitterController@show');
+
