@@ -48,8 +48,13 @@ class BusquedasController extends Controller
             return $compound_json;
         }
         else{
-            $out->writeln("Localidad no encontrada");
-            return response()->json(["Error" => "No hay coincidencias"]);
+            error_reporting(E_ALL); 
+            ini_set('display_errors', 1);
+            $read = exec("python ASTweets.py Barajas");
+            $out->writeln($read);
+            $out->writeln("Localidad no encontrada en BBDD");
+            #return response()->json(["Error" => "No hay coincidencias"]);
+            return response()->json($read);
         }
         /*
         if(!empty($request->input('texto'))){

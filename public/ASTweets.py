@@ -3,6 +3,7 @@ from textblob import TextBlob
 from deep_translator import GoogleTranslator
 import tweepy
 from datetime import date, timedelta
+import sys
 
 
 def extractTweets(busqueda):
@@ -15,7 +16,7 @@ def extractTweets(busqueda):
     auth = tweepy.AppAuthHandler(consumer_key, consumer_secret)
     api = tweepy.API(auth)
 
-    listaTweets = tweepy.Cursor(api.search_tweets, q=f'{busqueda} -filter:retweets').items(100)
+    listaTweets = tweepy.Cursor(api.search_tweets, q=f'{busqueda} -filter:retweets').items(5)
     listatextos = []
 
     fechaAyer = date.today() - timedelta(days=1)
@@ -26,7 +27,7 @@ def extractTweets(busqueda):
 
     for tweet in listaTweets:
         contador += 1
-        print(str(contador)+": "+str(tweet.created_at.date()))
+        #print(str(contador)+": "+str(tweet.created_at.date()))
         #print(tweet.text)
         '''
         try:
@@ -83,18 +84,19 @@ def calculoSent(list_of_text, totalMg, totalRt, busqueda):
                 
             #list_objects.append(str(tweet_object))
              
-            print(str(cont)+": "+str(sentimiento))
+            #print(str(cont)+": "+str(sentimiento))
             
         except:
-            print("Error de traducción")
-    print('\n..........\n')
+            pass
+            #print("Error de traducción")
+    #print('\n..........\n')
             
 
-    print("Suma de polaridades: "+str(polaridadTotal))
-    print("Polaridad media: "+str(polaridadTotal/(negativos+positivos)))
-    print("Tweets negativos: " + str(negativos))
-    print("Tweets positivos: " + str(positivos))
-    print("Tweets neutros: " + str(neutros))
+    #print("Suma de polaridades: "+str(polaridadTotal))
+    #print("Polaridad media: "+str(polaridadTotal/(negativos+positivos)))
+    #print("Tweets negativos: " + str(negativos))
+    #print("Tweets positivos: " + str(positivos))
+    #print("Tweets neutros: " + str(neutros))
 
     resultados = {
                 "busqueda": busqueda,
@@ -109,7 +111,8 @@ def calculoSent(list_of_text, totalMg, totalRt, busqueda):
     
     return resultados
 
-def sentimientoTweets(busqueda):
-    tweets, totalMg, totalRt = extractTweets(busqueda)
-    listaTweets = calculoSent(tweets, totalMg, totalRt, busqueda)
-    return str(listaTweets)
+busqueda = sys.argv[1]
+tweets, totalMg, totalRt = extractTweets(busqueda)
+resultadoAnalisis = str(calculoSent(tweets, totalMg, totalRt, busqueda))
+#return str(listaTweets)
+print(resultadoAnalisis)
