@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Busquedas;
 use App\Models\Noticias;
+use App\Models\Twitter;
 
 class BusquedasController extends Controller
 {
@@ -34,13 +35,20 @@ class BusquedasController extends Controller
             $id_busqueda = $busqueda_q->id;
             $out->writeln($id_busqueda);
 
-            $noticias_json = Noticias::select('id','url', 'titulo', 'subtitulo', 'fecha_noticia')
+            $noticias_json = Noticias::select('id','url', 'titulo', 'subtitulo',
+             'resultado','fecha_noticia')
             ->where("busquedas_id", $id_busqueda)->get()->toJson();
 
+            $tweets_q = Twitter::select('id','numero_tweets', 'polaridad', 'subjetividad')
+           ->where("busquedas_id", $id_busqueda)->first();
+
+            $compound_json = json_encode(array("noticias" => [$noticias_json], "twitter" => $tweets_q));
             $out->writeln(gettype($noticias_json));
-            return $noticias_json;
+
+            return $compound_json;
         }
         else{
+            $out->writeln("Localidad no encontrada");
             return response()->json(["Error" => "No hay coincidencias"]);
         }
         /*
