@@ -37,7 +37,7 @@ def guardarNoticias( listaN: list, ruta):
                     f"{n.texto}{s}" \
                     f"{n.tags}" \
                 # Path(ruta).mkdir(parents=True, exist_ok=True)
-            cd = os.getcwd() + "/"+n.periodico
+            cd = os.getcwd() + "/python-codes/noticias-scrapeadas" + "/"+n.periodico
 
             if not os.path.exists(cd):
                 os.mkdir(cd)
