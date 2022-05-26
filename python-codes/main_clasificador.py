@@ -67,11 +67,6 @@ for noticia in resultados_raw:
 # juntamos las dos listas (en caso de hacer lo de la sugerencia)
 # listaNoticiasConResultadoGlobales = listaNoticiasConResultadoClasificador + listaNoticiasConResultadoDeBBDD
 
-# resultados que necesitamos en el front: 
-# numero de noticias de no odio
-# numero de noticias de odio (no necesitamos devolverlo como variable porque se puede calcular a partir del numero de elementos de la lista)
-# lista con las noticias de odio
-
 # pasamos a JSON
 jsonString = "["
 for noticia, resultado in listaNoticiasConResultadoClasificador:
