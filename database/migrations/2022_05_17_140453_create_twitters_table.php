@@ -18,7 +18,8 @@ return new class extends Migration
             $table->integer("total_likes");
             $table->integer("numero_tweets");
             $table->integer("total_retweets");
-            $table->float("resultado_analisis",4,4);
+            $table->float("polaridad",4,4);
+            $table->float("subjetividad",4,4);
             $table->foreignId("busquedas_id")->constrained("busquedas");
             $table->timestamps();
         });
