@@ -94,7 +94,7 @@ def tratarTexto(t):
     # print(f"LEMAS:{lemas}\n{t4-t3}\n")
     return lemas
 
-def generarVectorDeTexto(t: str, saveWordlist: bool, file: str,odio: int = 0, rutaWordList= "diccionario.txt"):
+def generarVectorDeTexto(t: str, saveWordlist: bool, file ,odio: int = 0, rutaWordList= "diccionario.txt"):
     '''Genera un vector de texto a partir del texto/string "t" proporcionado, tratandolo
     en el proceso y elminando terminos superfluos.
     Los argumentos son los siguientes:

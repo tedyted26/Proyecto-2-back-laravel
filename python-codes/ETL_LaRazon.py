@@ -65,11 +65,3 @@ def getLaRazonNews(categoria):
             except Exception as e:
                 print(e)   
     return listaNoticias
-
-def laRazon():
-    busqueda = "barajas"
-    noticias = getLaRazonNews(busqueda)
-    #guardarNoticias(noticias, ("/"+busqueda))
-    Guardado.guardarNoticias(noticias, ("/"+busqueda))
-
-laRazon()

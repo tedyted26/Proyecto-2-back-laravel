@@ -45,8 +45,3 @@ def getABCNews(categoria: String, paginas = 1):
             listaNoticias.append(noticia)
             #print(titulo,link, "\n----\n")
     return listaNoticias
-
-
-categoria = "violencia"
-lNoticias = getABCNews(categoria,3)
-save.guardarNoticias(lNoticias, f"/{categoria}")

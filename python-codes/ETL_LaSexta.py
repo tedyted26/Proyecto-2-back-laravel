@@ -73,10 +73,3 @@ def scraper_la_sexta_bs4(busqueda, count_pages):
         pass
     return lista_noticias
 
-
-if __name__ == "__main__":
-    import Guardado
-
-    busqueda = "valencia"
-    lista = scraper_la_sexta_bs4("Madrid", 2)
-    Guardado.guardarNoticias(lista, ("/"+busqueda))

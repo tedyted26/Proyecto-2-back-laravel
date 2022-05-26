@@ -6,7 +6,7 @@ import Guardado as save
 import ssl
 
 def getLaVanguardiaNews(categoria:str, num_pags = 4):
-    )urlbase = "https://stories.lavanguardia.com/search?q="
+    urlbase = "https://stories.lavanguardia.com/search?q="
     url = urlbase + categoria + "&author=&category=&section=&startDate=&endDate=&sort="
     html = None
     print("pillando enlaces")
@@ -16,7 +16,7 @@ def getLaVanguardiaNews(categoria:str, num_pags = 4):
         html = rq.urlopen(url, context=ssl.SSLContext()).read()
         print("conexion realizada")
     except:
-        print("Pagina no encontrada"
+        print("Pagina no encontrada")
 
     if html != None:
         resultados = []
@@ -73,7 +73,3 @@ def getLaVanguardiaNews(categoria:str, num_pags = 4):
 
             noticias.append(Noticia(titulo, subtitulo, fecha, url_art, categoria, "La Vanguardia", [], texto))
     return noticias 
-
-categoria = "violencia"
-lNoticias = getLaVanguardiaNews(categoria)
-save.guardarNoticias(lNoticias, f"/{categoria}")

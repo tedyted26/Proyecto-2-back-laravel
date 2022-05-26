@@ -10,6 +10,8 @@
 from Classify import Classify
 import tratamientoNoticias as tn
 import os
+import Guardado as save
+import ETL_ABC, ETL_LaRazon, ETL_LaSexta, ETL_Nacionales, ETL_Vanguardia
 
 #------------WEB SCRAPING--------------# (sugerencia, de momento no lo hacemos)
 
@@ -21,6 +23,21 @@ import os
         # listaNoticiasConResultadoDeBBDD = []
 
     # para el resto de noticias que no existan, se completa el webscraping y se ejecuta el clasificador
+noticiasGlobales = []
+busqueda = "futbol"
+numPaginas = 2
+
+noticiasGlobales.extend(ETL_ABC.getABCNews(busqueda,numPaginas))
+
+# noticiasGlobales.extend(ETL_LaRazon.getLaRazonNews(busqueda))
+
+# noticiasGlobales.extend(ETL_LaSexta.scraper_la_sexta_bs4(busqueda, numPaginas))
+
+# noticiasGlobales.extend(ETL_Nacionales.get20MinutosNews(busqueda))
+
+# noticiasGlobales.extend(ETL_Nacionales.getElMundoNews(busqueda))
+
+# noticiasGlobales.extend(ETL_Vanguardia.getLaVanguardiaNews(busqueda))
 
 
 #-------------CLASIFICADOR-------------#
@@ -30,21 +47,21 @@ currentDirectory = os.getcwd() + "/python-codes"
 pathIDFList = currentDirectory + "/Modelos pre-entrenados/IDFlist.txt"
 pathDiccionario = currentDirectory + "/Modelos pre-entrenados/diccionario.txt"
 
-# FIXME cambiar directorio para que coincida con el resto de noticias scrapeadas
-pathNoticiasAClasificar = currentDirectory + "/noticias-scrapeadas/ABC/violencia"
 # FIXME algoritmo de prueba, se puede dejar que el admin pueda elegir entre ellos
 pathModelo = currentDirectory + "/Modelos pre-entrenados/arbolTn.pickle"
 
 
 modelo = classify.openModel(pathModelo)
 
-resultados_raw = classify.classifyNews(pathNoticiasAClasificar, modelo,
+# el clasificador está modificado para que devuelva un diccionario de index y resultado
+# el index es un int que corresponde a cada una de las noticias que hay en noticiasGlobales 
+resultados_raw = classify.classifyNews(noticiasGlobales, modelo,
                    pathIDFList, pathDiccionario)
 
 # creamos una lista de tuplas del mismo formato que la sacada de la BBDD
 listaNoticiasConResultadoClasificador = []
 for noticia in resultados_raw:
-    tupla = [tn.getNoticia(pathNoticiasAClasificar + '/' +noticia), resultados_raw[noticia]]
+    tupla = [noticiasGlobales[noticia], resultados_raw[noticia]]
     listaNoticiasConResultadoClasificador.append(tupla)
 
 # juntamos las dos listas (en caso de hacer lo de la sugerencia)
