@@ -71,7 +71,7 @@ for noticia in resultados_raw:
 jsonString = "["
 for noticia, resultado in listaNoticiasConResultadoClasificador:
     jsonString += "{url: " + noticia.url.replace("\n", "") + ",titulo: " + noticia.titulo + ",subtitulo: " + noticia.subtitulo + ",fecha_noticia: " + noticia.fecha + ",resultados: " + str(resultado) + "},"
-jsonString.removesuffix(",")
+jsonString = jsonString[:-1]
 jsonString = jsonString + "]"
 
 print(jsonString)
