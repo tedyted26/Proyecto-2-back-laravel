@@ -58,7 +58,7 @@ def leerNoticia(rutaFichero):
     return texto
 
 def getNoticia(rutaFichero):
-    print(rutaFichero)
+    #print(rutaFichero)
     f = open (rutaFichero,'r', encoding="ISO-8859-1")
     texto = f.read()
     if ";-;" in texto:
@@ -138,7 +138,7 @@ def generarVectorDeTexto(t: str, saveWordlist: bool, file ,odio: int = 0, rutaWo
         for elemento in wordlist:
             f.write(elemento + "\n")
         f.close()
-    print(time.time() - t5)
+    #print(time.time() - t5)
     # tiempos.append(time.time())
 
     # for i in range(len(tiempos)-1):
@@ -211,7 +211,7 @@ def addVectoresToMatrizByFolderPath(path: str, m: list, odio: int, max_noticias 
 
     vectores = []
     for i, x in enumerate(paths):
-        print(f"Añadiendo noticia {i} de {len(paths)}")
+        #print(f"Añadiendo noticia {i} de {len(paths)}")
         try:
             textoNoticia = leerNoticia(x[0])
             vectores.append(generarVectorDeTexto(textoNoticia, True, x[1], odio= odio))
@@ -224,6 +224,6 @@ def addVectoresToMatrizByFolderPath(path: str, m: list, odio: int, max_noticias 
 
 def transformMatrizToPandasDataFrame(matriz: list, rutaWordList= "diccionario.txt"):
     df = pd.DataFrame( matriz, columns=["odio_", "nombre_"] + getWordList(rutaWordList))
-    print(df.dtypes)
+    #print(df.dtypes)
     return df
 

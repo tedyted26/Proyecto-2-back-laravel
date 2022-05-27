@@ -15,7 +15,7 @@ class Classify():
     def checkPaths(self, noticias,
                    pathIDFlist= "IDFList.txt", pathWordlist= "diccionario.txt"):
         # If we haven't created a matrix with the results of TF-IDF with these paths
-
+        
         if (os.path.exists(pathIDFlist)):
 
             # Open dictionary 
@@ -28,12 +28,13 @@ class Classify():
 
             # Create the matrix with the new news
             vectores = []
-
+            
             noticiasTexto = save.pasarNoticiasATexto(noticias)
             i = 0
             for textoNoticia in noticiasTexto:
                 try:
                     # FIXME ------------------
+                    #print(noticiasTexto)
                     vectorNoticia = tn.generarVectorDeTexto(textoNoticia, False, i, odio= 0, rutaWordList=pathWordlist)
                     
                     if len(vectorNoticia) > dic_length:
@@ -44,7 +45,7 @@ class Classify():
                     print(f"Error generando vector en posicion: {i} del vector de noticias de texto")
                 i = i + 1
                 # ----------------
-            
+
             self.matriz = []
 
             for v in vectores:

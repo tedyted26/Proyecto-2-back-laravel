@@ -48,13 +48,16 @@ class BusquedasController extends Controller
             return $compound_json;
         }
         else{
-            error_reporting(E_ALL); 
-            ini_set('display_errors', 1);
-            $read = exec("python ASTweets.py Barajas");
-            $out->writeln($read);
             $out->writeln("Localidad no encontrada en BBDD");
+            $busqueda = "Barajas";
+            error_reporting(E_ALL);
+            ini_set('display_errors', 1);
+            //$readTweets = exec("python ".dirname(__FILE__)."/../../../python-codes/ASTweets.py ".$busqueda);
+            $readNews = exec("python ".dirname(__FILE__)."/../../../python-codes/main_clasificador.py ".$busqueda);
+            //$out->writeln($readTweets);
+            $out->writeln($readNews);
             #return response()->json(["Error" => "No hay coincidencias"]);
-            return response()->json($read);
+            return response()->json($readNews);
         }
         /*
         if(!empty($request->input('texto'))){

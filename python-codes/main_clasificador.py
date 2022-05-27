@@ -12,6 +12,7 @@ import tratamientoNoticias as tn
 import os
 import Guardado as save
 import ETL_ABC, ETL_LaRazon, ETL_LaSexta, ETL_Nacionales, ETL_Vanguardia
+import sys
 
 #------------WEB SCRAPING--------------# (sugerencia, de momento no lo hacemos)
 
@@ -24,8 +25,8 @@ import ETL_ABC, ETL_LaRazon, ETL_LaSexta, ETL_Nacionales, ETL_Vanguardia
 
     # para el resto de noticias que no existan, se completa el webscraping y se ejecuta el clasificador
 noticiasGlobales = []
-busqueda = "futbol"
-numPaginas = 2
+busqueda = "Barajas" #sys.argv[1]
+numPaginas = 1
 
 noticiasGlobales.extend(ETL_ABC.getABCNews(busqueda,numPaginas))
 
@@ -43,20 +44,25 @@ noticiasGlobales.extend(ETL_ABC.getABCNews(busqueda,numPaginas))
 #-------------CLASIFICADOR-------------#
 classify = Classify()
 
+os.chdir("..")
 currentDirectory = os.getcwd() + "/python-codes"
+#os.chdir("/public")
+print(currentDirectory)
 pathIDFList = currentDirectory + "/Modelos pre-entrenados/IDFlist.txt"
 pathDiccionario = currentDirectory + "/Modelos pre-entrenados/diccionario.txt"
 
 # FIXME algoritmo de prueba, se puede dejar que el admin pueda elegir entre ellos
 pathModelo = currentDirectory + "/Modelos pre-entrenados/arbolTn.pickle"
-
+#print(currentDirectory)
 
 modelo = classify.openModel(pathModelo)
+
 
 # el clasificador está modificado para que devuelva un diccionario de index y resultado
 # el index es un int que corresponde a cada una de las noticias que hay en noticiasGlobales 
 resultados_raw = classify.classifyNews(noticiasGlobales, modelo,
                    pathIDFList, pathDiccionario)
+#print(resultados_raw)
 
 # creamos una lista de tuplas del mismo formato que la sacada de la BBDD
 listaNoticiasConResultadoClasificador = []
@@ -75,4 +81,5 @@ jsonString = jsonString[:-1]
 jsonString = jsonString + "]"
 
 print(jsonString)
+
 
