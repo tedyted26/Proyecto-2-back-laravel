@@ -44,10 +44,10 @@ noticiasGlobales.extend(ETL_ABC.getABCNews(busqueda,numPaginas))
 #-------------CLASIFICADOR-------------#
 classify = Classify()
 
-os.chdir("..")
+
 currentDirectory = os.getcwd() + "/python-codes"
 #os.chdir("/public")
-print(currentDirectory)
+
 pathIDFList = currentDirectory + "/Modelos pre-entrenados/IDFlist.txt"
 pathDiccionario = currentDirectory + "/Modelos pre-entrenados/diccionario.txt"
 

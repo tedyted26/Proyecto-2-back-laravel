@@ -34,7 +34,7 @@ class Classify():
             for textoNoticia in noticiasTexto:
                 try:
                     # FIXME ------------------
-                    #print(noticiasTexto)
+                    #print(textoNoticia)
                     vectorNoticia = tn.generarVectorDeTexto(textoNoticia, False, i, odio= 0, rutaWordList=pathWordlist)
                     
                     if len(vectorNoticia) > dic_length:
@@ -43,6 +43,7 @@ class Classify():
                     vectores.append(vectorNoticia)
                 except:
                     print(f"Error generando vector en posicion: {i} del vector de noticias de texto")
+                    
                 i = i + 1
                 # ----------------
 

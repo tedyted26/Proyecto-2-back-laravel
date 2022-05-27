@@ -53,7 +53,7 @@ class BusquedasController extends Controller
             error_reporting(E_ALL);
             ini_set('display_errors', 1);
             //$readTweets = exec("python ".dirname(__FILE__)."/../../../python-codes/ASTweets.py ".$busqueda);
-            $readNews = exec("python ".dirname(__FILE__)."/../../../python-codes/main_clasificador.py ".$busqueda);
+            $readNews = exec("python ./python-codes/main_clasificador.py ".$busqueda);
             //$out->writeln($readTweets);
             $out->writeln($readNews);
             #return response()->json(["Error" => "No hay coincidencias"]);
