@@ -21,7 +21,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
     Route::group([
 
-<<<<<<< HEAD
         'middleware' => 'api',
         'prefix' => 'auth'
     
@@ -38,7 +37,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 //Route::get('logout', $ruta_controllers.);
 //Route::get('refresh', $ruta_controllers.);
 //Route::get('login', $ruta_controllers.);
-=======
 Route::get('admins', $ruta_controllers.'AdminsController@index');
 Route::post('admins', $ruta_controllers.'AdminsController@index2');
 Route::get('admins/{id}', $ruta_controllers.'AdminsController@show');
@@ -46,4 +44,3 @@ Route::post('busquedas', $ruta_controllers.'BusquedasController@getSearch');
 Route::get('busquedas', $ruta_controllers.'BusquedasController@index');
 Route::get('busquedas/{id}', $ruta_controllers.'BusquedasController@show');
 
->>>>>>> 2f4a0e61759ed566ed03605dd2043a7f8a122864
