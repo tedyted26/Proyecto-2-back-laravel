@@ -20,7 +20,8 @@ class TwitterFactory extends Factory
             "total_likes"=>$this->faker->numberBetween(0,1000000),
             "numero_tweets"=>$this->faker->numberBetween(5,500),
             "total_retweets"=>$this->faker->numberBetween(0,1000000),
-            "resultado_analisis"=>$this->faker->randomFloat(4,-1.0,1.0),
+            "polaridad"=>$this->faker->randomFloat(4,-1.0,1.0),
+            "subjetividad"=>$this->faker->randomFloat(4,-1.0,1.0),
             "busquedas_id"=>\App\Models\Busquedas::inRandomOrder()->first()->id
         ];
     }
