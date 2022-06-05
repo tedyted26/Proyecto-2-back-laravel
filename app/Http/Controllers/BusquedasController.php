@@ -37,13 +37,12 @@ class BusquedasController extends Controller
 
             $noticias_json = Noticias::select('id','url', 'titulo', 'subtitulo',
              'resultado','fecha_noticia')
-            ->where("busquedas_id", $id_busqueda)->get()->toJson();
+            ->where("busquedas_id", $id_busqueda)->get();
 
             $tweets_q = Twitter::select('id','numero_tweets', 'polaridad', 'subjetividad')
            ->where("busquedas_id", $id_busqueda)->first();
-
-            $compound_json = json_encode(array("noticias" => [$noticias_json], "twitter" => $tweets_q));
-            $out->writeln(gettype($noticias_json));
+           
+            $compound_json = json_encode(array("noticias" =>  $noticias_json, "twitter" => $tweets_q));
 
             return $compound_json;
         }
