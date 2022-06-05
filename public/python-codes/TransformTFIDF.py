@@ -15,19 +15,20 @@ IDF_FILE_RPATH = "IDFlist.txt"
 def matrixToTFIDF(m, pathIDFlist= "IDFList.txt", pathWordlist= "diccionario.txt"):
     new_m = []
     df = m
+    
     if type(m) == list:
         df = tn.transformMatrizToPandasDataFrame(m, pathWordlist)
 
     IDFlist = None
     if os.path.isfile(pathIDFlist):
-        print("holi")
+        #print("holi")
         listaIDF = numpy.loadtxt(pathIDFlist)
     else:
         listaIDF = getIDFlistOfMatriz(df)
         numpy.savetxt(IDF_FILE_RPATH, listaIDF)
 
     for i in range(len(df)):
-        print("Posicion de lista operandose TFIDF:", i)
+        #print("Posicion de lista operandose TFIDF:", i)
         new_m.append(indexListToTFIDF(df, i, listaIDF))
 
     return new_m

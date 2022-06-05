@@ -111,24 +111,6 @@ def getElPaisNews(categoria):
     listaNoticias = []
     return listaNoticias
 '''
-
-
-
-
-def el20Minutos():
-    
-    busqueda = "ponferrada"
-    
-    noticias = get20MinutosNews(busqueda)
-    Guardado.guardarNoticias(noticias, ("/"+busqueda))
-    
-
-def elMundo():
-    
-    busqueda = "barajas"
-    
-    noticias = getElMundoNews(busqueda)
-    Guardado.guardarNoticias(noticias, ("/"+busqueda))
     
 '''
 def elPais():
@@ -138,18 +120,6 @@ def elPais():
     noticias = getElPaisNews(busqueda)
     #Guardado.guardarNoticias(noticias, ("/"+busqueda))
 '''
-
-    
-   
-    
-   
-el20Minutos()
-elMundo()
-
-
-
-
-
     
 '''
 print(noticias[1].periodico)

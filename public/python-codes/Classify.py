@@ -3,22 +3,20 @@ import tratamientoNoticias as tn
 import os
 
 from sklearn import preprocessing
+import Guardado as save
 
 class Classify():
     def __init__(self):
-        self.pathNoticias = ''
         self.carpeta_pathModelo = ''
         self.carpeta_pathModeloNueva = ""
         self.matriz = []
         self.df_with_name = None
 
-    def checkPaths(self, pathNoticias,
+    def checkPaths(self, noticias,
                    pathIDFlist= "IDFList.txt", pathWordlist= "diccionario.txt"):
         # If we haven't created a matrix with the results of TF-IDF with these paths
-
-        if ((pathNoticias != self.pathNoticias or self.carpeta_pathModelo != self.carpeta_pathModeloNueva) and os.path.exists(pathIDFlist)):
-            self.pathNoticias = pathNoticias
-
+        
+        if (os.path.exists(pathIDFlist)):
 
             # Open dictionary 
             if os.path.exists(pathWordlist):
@@ -30,21 +28,25 @@ class Classify():
 
             # Create the matrix with the new news
             vectores = []
-
-            paths = tn.getAllNewsUrlList(pathNoticias)
-            for n, i in enumerate(paths):
+            
+            noticiasTexto = save.pasarNoticiasATexto(noticias)
+            i = 0
+            for textoNoticia in noticiasTexto:
                 try:
-                    textoNoticia = tn.leerNoticia(i[0])
-
-                    vectorNoticia = tn.generarVectorDeTexto(textoNoticia, False, i[1], odio= 0, rutaWordList=pathWordlist)
+                    # FIXME ------------------
+                    #print(textoNoticia)
+                    vectorNoticia = tn.generarVectorDeTexto(textoNoticia, False, i, odio= 0, rutaWordList=pathWordlist)
                     
                     if len(vectorNoticia) > dic_length:
                         vectorNoticia = vectorNoticia[:dic_length+2]
 
                     vectores.append(vectorNoticia)
                 except:
-                    print(f"Error generando vector en archivo: {i[1]}")
-            
+                    print(f"Error generando vector en posicion: {i} del vector de noticias de texto")
+                    
+                i = i + 1
+                # ----------------
+
             self.matriz = []
 
             for v in vectores:
@@ -56,14 +58,9 @@ class Classify():
             # convert it into datafame
             self.df_with_name = tn.transformMatrizToPandasDataFrame(matriz_tfidf, pathWordlist)
             self.df_with_name.fillna(0, inplace=True)
-
-            # save the original matrix for later
-            # tn.saveMatrizToFile(self.matriz, "matrizUnkwnNews.txt")
             
         # If we have a saved matrix but hasn't been imported
         elif len(self.matriz) == 0:
-            # Import the saved matrix
-            # self.matriz = tn.generarMatriz("matrizUnkwnNews.txt")
             # transform to tfidf
             m1_tf = tn.tfidf.matrixToTFIDF(self.matriz)
             # convert into dataframe
@@ -71,11 +68,10 @@ class Classify():
             self.df_with_name.fillna(0, inplace=True)
         self.carpeta_pathModelo = self.carpeta_pathModeloNueva
 
-    def classifyNews(self, pathNoticias, model,
+    def classifyNews(self, noticiasEnTexto, model,
                    pathIDFlist= "IDFList.txt", pathWordlist= "diccionario.txt"):
-        # estaria bien que fuera un diccionario de clave valor, siendo el valor si es de odio o no, y la clave la ruta de la noticia
-        # importante guardar el tiempo que tarda el algoritmo en ejecutarse
-        self.checkPaths(pathNoticias, pathIDFlist, pathWordlist)
+
+        self.checkPaths(noticiasEnTexto, pathIDFlist, pathWordlist)
         resultados = {}
         
         df = self.df_with_name.drop(["odio_", "nombre_"], axis=1)
@@ -103,14 +99,5 @@ class Classify():
                 return model
         else:
             return None
-    
-    def saveResult(self, filepath, result):
-        with open(filepath, "w") as f:   
-            for row in result:
-                if result[row] == -1:
-                    res = 'No odio'
-                elif result[row] == 1:
-                    res = 'Odio'
-                f.write(res + ";" + row + "\n")
         
             

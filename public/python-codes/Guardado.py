@@ -51,3 +51,18 @@ def guardarNoticias( listaN: list, ruta):
             fechaAnterior = current_time
         except Exception as e:
             print(e)
+
+def pasarNoticiasATexto( listaN: list):
+    noticiasTexto = []
+    for n in listaN:
+        s = "\n#####\n"
+        texto = f"{n.url}{s}" \
+                f"{n.periodico}{s}" \
+                f"{n.categoria}{s}" \
+                f"{n.fecha}{s}" \
+                f"{n.titulo}{s}" \
+                f"{n.subtitulo}{s}" \
+                f"{n.texto}{s}" \
+                f"{n.tags}"
+        noticiasTexto.append(texto)
+    return noticiasTexto
