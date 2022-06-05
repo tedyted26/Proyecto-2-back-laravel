@@ -13,16 +13,21 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-$ruta_controllers = "App\Http\Controllers\\" ;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('admins', $ruta_controllers.'AdminsController@index');
-Route::post('admins', $ruta_controllers.'AdminsController@index2');
-Route::get('admins/{id}', $ruta_controllers.'AdminsController@show');
-Route::post('busquedas', $ruta_controllers.'BusquedasController@getSearch');
-Route::get('busquedas', $ruta_controllers.'BusquedasController@index');
-Route::get('busquedas/{id}', $ruta_controllers.'BusquedasController@show');
+Route::group(['middleware' => ['cors']], function () {
+    $ruta_controllers = "App\Http\Controllers\\" ;
+    //Rutas a las que se permitirá acceso
+    Route::get('admins', $ruta_controllers.'AdminsController@index');
+    Route::post('admins', $ruta_controllers.'AdminsController@index2');
+    Route::get('admins/{id}', $ruta_controllers.'AdminsController@show');
+    Route::post('busquedas', $ruta_controllers.'BusquedasController@getSearch');
+    Route::get('busquedas', $ruta_controllers.'BusquedasController@index');
+    Route::get('busquedas/{id}', $ruta_controllers.'BusquedasController@show');
+});
+
+
 
