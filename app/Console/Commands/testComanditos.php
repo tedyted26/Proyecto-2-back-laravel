@@ -5,6 +5,8 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 
+use App\Models\Busquedas;
+
 class testComanditos extends Command
 {
     /**
@@ -30,8 +32,15 @@ class testComanditos extends Command
     public function handle()
     {
         $this->info("Custom task started");
-        Storage::disk('local')->put('example.txt', "Hola");
-        dd("testeito");
+        #Storage::disk('local')->put('example.txt', "Hola");
+        #dd("testeito");
+        $Busqueda = new Busquedas;
+        $Busqueda->fecha_busqueda = "2009-09-28";
+        $Busqueda->lugar = "mi casa";
+        $Busqueda->visitas_totales = 5;
+        $Busqueda->resultado_odio = 0.5;
+        $Busqueda->save();
+
         return 0;
     }
 }
