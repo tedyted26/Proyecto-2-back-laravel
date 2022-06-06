@@ -15,7 +15,18 @@ def getPueblosEspana():
     resultados = soup.findAll("table")[2]
     links = resultados.findAll("a")
 
+    listaPueb = []
+    ppp = ""
+
+    for i in links:
+        listaPueb.append( i.text.replace("Pueblos de ",""))
+    listaPueb.sort()
+    for i in listaPueb:
+        t = "\""+i+"\","
+        ppp += t
+    print(ppp)
     pueblos = []
+    '''
     for i in links:
         url_busq = urlbase + i["href"][1:]
         print("Inicio con url_busq: ", url_busq)
@@ -37,12 +48,13 @@ def getPueblosEspana():
             if p != "" and p != " ":
                 bisect.insort(pueblos, p)
         print("fin")
-
+    
 
     print(len(pueblos))
     txt = "\n".join(pueblos)
     f = open("pueblos_espana.txt", "w")
     f.write(txt)
+    '''
 
 getPueblosEspana()
 
