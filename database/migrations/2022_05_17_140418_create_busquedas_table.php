@@ -15,7 +15,6 @@ return new class extends Migration
     {
         Schema::create('busquedas', function (Blueprint $table) {
             $table->id();
-            $table->date("fecha_busqueda");
             $table->string("lugar");
             $table->integer("visitas_totales");
             $table->float("resultado_odio",4,4);
