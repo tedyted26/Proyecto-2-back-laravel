@@ -17,7 +17,6 @@ class BusquedasFactory extends Factory
     public function definition()
     {
         return [
-            "fecha_busqueda"=>$this->faker->date,
             "lugar"=>$this->faker->city,
             "visitas_totales"=>$this->faker->numberBetween(0,1000000),
             "resultado_odio"=>$this->faker->randomFloat(4,-1.0,1.0),
