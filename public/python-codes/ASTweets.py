@@ -4,6 +4,7 @@ from deep_translator import GoogleTranslator
 import tweepy
 from datetime import date, timedelta
 import sys
+import json
 
 
 def extractTweets(busqueda):
@@ -50,11 +51,12 @@ def extractTweets(busqueda):
 
 def calculoSent(list_of_text, totalMg, totalRt, busqueda):
     polaridadTotal = 0
+    subjetividadTotal = 0
     positivos = 0
     negativos = 0
     neutros = 0
 
-    list_objects = []
+    
     id = 0
     cont = 0
     for tweet in list_of_text:
@@ -65,6 +67,7 @@ def calculoSent(list_of_text, totalMg, totalRt, busqueda):
             traduccion = TextBlob(translated)
             #print(traduccion.words)
             sentimiento = traduccion.sentiment[0]
+            subjetividad = traduccion.sentiment[1]
             '''
             tweet_object = {
                 'id':id,
@@ -74,6 +77,8 @@ def calculoSent(list_of_text, totalMg, totalRt, busqueda):
             }
             '''
             polaridadTotal = polaridadTotal+sentimiento
+            subjetividadTotal = subjetividadTotal+subjetividad
+            
             
             if sentimiento == 0:
                 neutros += 1
@@ -98,16 +103,8 @@ def calculoSent(list_of_text, totalMg, totalRt, busqueda):
     #print("Tweets positivos: " + str(positivos))
     #print("Tweets neutros: " + str(neutros))
 
-    resultados = {
-                "busqueda": busqueda,
-                'tweetsAnalizados':len(list_of_text),
-                "polaridadMedia":polaridadTotal/(negativos+positivos),
-                "positivos":positivos,
-                'negativos':negativos,
-                "neutros": neutros,
-                "totalMg": totalMg,
-                "totalRt": totalRt
-            }
+    resultados = '{"busqueda": "'+busqueda+'", "tweetsAnalizados": '+str(len(list_of_text))+', "polaridadMedia": '+str(polaridadTotal/(negativos+positivos))+', "subjetividadMedia": '+str(subjetividadTotal/len(list_of_text))+', "totalMg": '+str(totalMg)+', "totalRt": '+str(totalRt)+'}'
+    
     
     return resultados
 

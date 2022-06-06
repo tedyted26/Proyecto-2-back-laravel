@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from base64 import encode
 from bs4 import BeautifulSoup
 from urllib import request as rq
 import datetime as dt
@@ -15,12 +16,17 @@ import Guardado
 def getLaRazonNews(categoria):
     listaNoticias = []
     listaLinks = []
-    for paginas in range(1,3):
+    for paginas in range(1):
         urlBase = "https://www.larazon.es/resultados-de-busqueda/"
         mainUrl = urlBase+categoria+'/'+str(paginas)
     
         html = rq.urlopen(mainUrl, context=ssl.SSLContext()).read()
-        soup = BeautifulSoup(html, 'html.parser')
+        #html = html.decode("utf-8")
+        soup = BeautifulSoup(html,  from_encoding="UTF-8")
+
+        #print("Encoded method :", soup.original_encoding)
+        #soup.encode("utf-8")
+        
     
         for a in soup.findAll('article', {'class': 'card grid--has-6-col card--is-horizontal'}):
             listaLinks.append(a.find("a")["href"])

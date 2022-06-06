@@ -11,14 +11,14 @@ def getABCNews(categoria: String, paginas = 1):
     urlbase = "https://www.abc.es/hemeroteca/noticia/"
     listaNoticias = []
 
-    for pagina in range(1, paginas+1):
+    for pagina in range(1):
         url = urlbase + categoria + f"/pagina-{pagina}"
         html = rq.urlopen(url, context=ssl.SSLContext()).read()
         soup = BeautifulSoup(html, 'html.parser')
 
         resultados = soup.find(id="results-content")
         
-        for li in resultados.findAll("li"):
+        for li in resultados.findAll("li")[:3]:
             link = li.find("a")["href"]
             html_noticia = ""
             try:
@@ -27,7 +27,7 @@ def getABCNews(categoria: String, paginas = 1):
                 pass
 
             if html_noticia != "":
-                soupTmp = BeautifulSoup(html_noticia, 'html.parser')
+                soupTmp = BeautifulSoup(html_noticia, from_encoding="UTF-8", features='html.parser')
 
                 encabezado = soupTmp.find(class_="encabezado-articulo")
                 titulo = encabezado.find(class_="titular").text
@@ -50,3 +50,8 @@ def getABCNews(categoria: String, paginas = 1):
                 listaNoticias.append(noticia)
                 #print(titulo,link, "\n----\n") 
     return listaNoticias
+
+news = getABCNews("Albacete", paginas = 1)
+
+for noticia in news:
+    print(noticia.titulo)
