@@ -27,9 +27,13 @@ class BusquedasController extends Controller
      */
     public function getSearch(Request $request){
         $out = new \Symfony\Component\Console\Output\ConsoleOutput();
+        $out->writeln("Iniciando busqueda");
+        $out->writeln($request);
+
         $textoBuscado = $request->input('texto');
 
         $busqueda_q = Busquedas::select('*')->where("lugar", $textoBuscado)->first();
+        
 
         if(!empty($busqueda_q)){
             $id_busqueda = $busqueda_q->id;

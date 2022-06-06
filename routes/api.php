@@ -14,7 +14,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+        
 Route::middleware('auth:api')->get('/user', function (Request $request) {
+    $out = new \Symfony\Component\Console\Output\ConsoleOutput();
+        $out->writeln("1");
         return $request->user();
     });
 
@@ -24,7 +27,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
         'prefix' => 'auth'
     
     ], function ($router) {
-    
+        $out = new \Symfony\Component\Console\Output\ConsoleOutput();
+        $out->writeln("2");
         Route::post('/login', 'App\Http\Controllers\AuthController@login');
         Route::post('/logout', 'App\Http\Controllers\AuthController@logout');
         Route::post('/refresh', 'App\Http\Controllers\AuthController@refresh');
@@ -40,6 +44,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 //Route::get('busquedas', $ruta_controllers.'BusquedasController@index');
 //Route::get('busquedas/{id}', $ruta_controllers.'BusquedasController@show');
 Route::group(['middleware' => ['cors']], function () {
+    $out = new \Symfony\Component\Console\Output\ConsoleOutput();
+    $out->writeln("3");
     $ruta_controllers = "App\Http\Controllers\\" ;
     //Rutas a las que se permitirá acceso
     Route::get('admins', $ruta_controllers.'AdminsController@index');
