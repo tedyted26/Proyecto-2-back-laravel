@@ -31,7 +31,7 @@ class busqueda extends Command
     public function handle()
     {
         $out = new \Symfony\Component\Console\Output\ConsoleOutput();
-        $textoBuscado = "Albacete";
+        $textoBuscado = "Pontevedra";
 
         $Busqueda = new Busquedas;
         $Busqueda->lugar = $textoBuscado;
@@ -42,6 +42,7 @@ class busqueda extends Command
         $readTweets = exec("python ./python-codes/ASTweets.py ".$textoBuscado);
         $out->writeln($readTweets);
         $json_tweets = json_decode($readTweets);
+        $out->writeln("Tweets decodificados correctamente");
 
         $Tweets = new Twitter;
         $Tweets->total_likes = $json_tweets->totalMg;
@@ -53,25 +54,30 @@ class busqueda extends Command
         $out->writeln("Tweets Bien");
         
         $textoBuscado = preg_replace('/\s+/', '', $textoBuscado);
-
+        $out->writeln($textoBuscado);
         $readNews = exec("python ./python-codes/main_clasificador.py ".$textoBuscado);
-        $out->writeln($readNews);
-        $json_news = json_decode($readNews, true);
+        if(!empty($readNews)){
+            $out->writeln($readNews);
+            $json_news = json_decode($readNews, true);
+            $out->writeln(gettype($json_news));
+            if($json_news != null){
+                $Busqueda->save();
+                $id = $Busqueda->id;
+                $Tweets->busquedas_id = $id;
+                $Tweets->save();
 
-        $Busqueda->save();
-        $id = $Busqueda->id;
-        $Tweets->busquedas_id = $id;
-        $Tweets->save();
-
-        foreach ($json_news as &$noticia) {
-            $Noticia = new Noticias;
-            $Noticia->url = $noticia["url"];
-            $Noticia->titulo = $noticia["titulo"];
-            $Noticia->subtitulo = $noticia["subtitulo"];
-            $Noticia->resultado = $noticia["resultados"];
-            $Noticia->fecha_noticia = "2022-01-01";
-            $Noticia->busquedas_id = $id;
-            $Noticia->save();
+                foreach ($json_news as &$noticia) {
+                    $Noticia = new Noticias;
+                    $Noticia->url = $noticia["url"];
+                    $Noticia->titulo = $noticia["titulo"];
+                    $Noticia->subtitulo = $noticia["subtitulo"];
+                    $Noticia->resultado = $noticia["resultados"];
+                    $Noticia->fecha_noticia = "2022-01-01";
+                    $Noticia->busquedas_id = $id;
+                    $Noticia->save();
+                }
+                $out->writeln("FINALIZADO CORRECTAMENTE");
+            }
         }
         
         return 0;

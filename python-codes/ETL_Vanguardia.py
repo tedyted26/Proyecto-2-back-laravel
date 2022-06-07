@@ -5,10 +5,12 @@ import Guardado as save
 
 import ssl
 
-def getLaVanguardiaNews(categoria:str, num_pags = 4):
+def getLaVanguardiaNews(categoria:str, num_pags = 1):
+    noticias = []
     urlbase = "https://stories.lavanguardia.com/search?q="
     url = urlbase + categoria + "&author=&category=&section=&startDate=&endDate=&sort="
     html = None
+    print(url)
     print("pillando enlaces")
 
     # ver que hacer con los resultados de la busqueda que no llevan a ninguna parte
@@ -48,7 +50,7 @@ def getLaVanguardiaNews(categoria:str, num_pags = 4):
                 resultados.extend(soup_pag.find_all(class_="result"))
                 page = page + 1
 
-        noticias = []
+        
 
         # dentro de las noticia
         for article in resultados:

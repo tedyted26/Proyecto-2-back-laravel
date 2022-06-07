@@ -15,11 +15,11 @@ from Guardado import guardarNoticias
 
 
 
-def scraper_la_sexta_bs4(busqueda, count_pages):
+def scraper_la_sexta_bs4(busqueda):
     lista_noticias = []
     url_base = "https://www.lasexta.com/"
-    url_odio = f"temas/{busqueda}-"
-    url = url_base + url_odio + str(count_pages)
+    url_odio = f"temas/{busqueda}-1"
+    url = url_base + url_odio
     urls = []
     try:
         page = requests.get(url)
@@ -30,9 +30,9 @@ def scraper_la_sexta_bs4(busqueda, count_pages):
                 #print("#################")
                 #print("Articulo")
                 #print(articulo)
-        print("\n#######################")
-        print("Aca comienzan cada noticia desde la URL.\n")
-        print("Parrafos:")
+        #print("\n#######################")
+        #print("Aca comienzan cada noticia desde la URL.\n")
+        #print("Parrafos:")
         conjuntoParrafos = []
 
         for url in urls:
