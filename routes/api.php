@@ -14,11 +14,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-        
+
+
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     $out = new \Symfony\Component\Console\Output\ConsoleOutput();
         $out->writeln("1");
         return $request->user();
+    });
+
+    Route::group(['middleware' => ['jwt.verify']], function() {
+        $ruta_controllers = "App\Http\Controllers\\" ;
+        
     });
 
     Route::group([
