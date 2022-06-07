@@ -3,6 +3,9 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use App\Models\Busquedas;
+use App\Models\Noticias;
+use App\Models\Twitter;
 
 class busqueda extends Command
 {
@@ -11,7 +14,7 @@ class busqueda extends Command
      *
      * @var string
      */
-    protected $signature = 'command:name';
+    protected $signature = 'bbdd:busquedas';
 
     /**
      * The console command description.
@@ -27,14 +30,14 @@ class busqueda extends Command
      */
     public function handle()
     {
+        $out = new \Symfony\Component\Console\Output\ConsoleOutput();
         $textoBuscado = "Madrid";
 
         $Busqueda = new Busquedas;
         $Busqueda->lugar = $textoBuscado;
         $Busqueda->visitas_totales = 0;
         $Busqueda->resultado_odio = 0;
-        $Busqueda->save();
-        $id = $Busqueda->id;
+        
 
         $readTweets = exec("python ./python-codes/ASTweets.py ".$textoBuscado);
         $out->writeln($readTweets);
@@ -46,8 +49,7 @@ class busqueda extends Command
         $Tweets->numero_tweets = $json_tweets->tweetsAnalizados;
         $Tweets->polaridad = $json_tweets->polaridadMedia;
         $Tweets->subjetividad = $json_tweets->subjetividadMedia;
-        $Tweets->busquedas_id = $id;
-        $Tweets->save();
+
         $out->writeln("Tweets Bien");
         
         $textoBuscado = preg_replace('/\s+/', '', $textoBuscado);
@@ -55,6 +57,11 @@ class busqueda extends Command
         $readNews = exec("python ./python-codes/main_clasificador.py ".$textoBuscado);
         $out->writeln($readNews);
         $json_news = json_decode($readNews, true);
+
+        $Busqueda->save();
+        $id = $Busqueda->id;
+        $Tweets->busquedas_id = $id;
+        $Tweets->save();
 
         foreach ($json_news as &$noticia) {
             $Noticia = new Noticias;
@@ -66,6 +73,7 @@ class busqueda extends Command
             $Noticia->busquedas_id = $id;
             $Noticia->save();
         }
+        
         return 0;
     }
 }
