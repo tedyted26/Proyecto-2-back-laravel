@@ -31,7 +31,7 @@ class busqueda extends Command
     public function handle()
     {
         $out = new \Symfony\Component\Console\Output\ConsoleOutput();
-        $textoBuscado = "Madrid";
+        $textoBuscado = "Albacete";
 
         $Busqueda = new Busquedas;
         $Busqueda->lugar = $textoBuscado;
