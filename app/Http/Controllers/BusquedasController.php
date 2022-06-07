@@ -28,9 +28,13 @@ class BusquedasController extends Controller
      */
     public function getSearch(Request $request){
         $out = new \Symfony\Component\Console\Output\ConsoleOutput();
+        $out->writeln("Iniciando busqueda");
+        $out->writeln($request);
+
         $textoBuscado = $request->input('texto');
 
-        $busqueda_q = Busquedas::select('*')->where("lugar", $textoBuscado)->first();
+        $busqueda_q = Busquedas::select('*')->where("lugar", $textoBuscado)->orderBy('id', 'desc')->first();
+        
 
         if(!empty($busqueda_q)){
             $id_busqueda = $busqueda_q->id;
@@ -46,7 +50,7 @@ class BusquedasController extends Controller
             $tweets_q = Twitter::select('id','numero_tweets', 'polaridad', 'subjetividad')
            ->where("busquedas_id", $id_busqueda)->first();
            
-            $compound_json = json_encode(array("noticias" =>  $noticias_json, "twitter" => $tweets_q));
+            $compound_json = json_encode(array("noticias" =>  $noticias_json, "twitter" => $tweets_q, "lugar" => $textoBuscado));
 
             return $compound_json;
         }

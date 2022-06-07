@@ -14,6 +14,8 @@ class Authenticate extends Middleware
      */
     protected function redirectTo($request)
     {
+        $out = new \Symfony\Component\Console\Output\ConsoleOutput();
+        $out->writeln("auth");
         if (! $request->expectsJson()) {
             return route('login');
         }

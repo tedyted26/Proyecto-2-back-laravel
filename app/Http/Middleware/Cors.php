@@ -16,6 +16,8 @@ class Cors
      */
     public function handle(Request $request, Closure $next)
     {
+        $out = new \Symfony\Component\Console\Output\ConsoleOutput();
+        $out->writeln("cors");
         return $next($request)
       //Url a la que se le dará acceso en las peticiones
       //->header("Access-Control-Allow-Origin", "http://localhost:4200/")
