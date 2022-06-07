@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from tokenize import String
 from bs4 import BeautifulSoup
 from urllib import request as rq
@@ -18,7 +19,7 @@ def getABCNews(categoria: String, paginas = 1):
 
         resultados = soup.find(id="results-content")
         
-        for li in resultados.findAll("li")[:3]:
+        for li in resultados.findAll("li")[:2]:
             link = li.find("a")["href"]
             html_noticia = ""
             try:
@@ -50,8 +51,9 @@ def getABCNews(categoria: String, paginas = 1):
                 listaNoticias.append(noticia)
                 #print(titulo,link, "\n----\n") 
     return listaNoticias
-
+'''
 news = getABCNews("Albacete", paginas = 1)
 
 for noticia in news:
     print(noticia.titulo)
+'''
