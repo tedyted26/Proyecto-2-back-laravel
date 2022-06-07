@@ -14,7 +14,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-
+$out = new \Symfony\Component\Console\Output\ConsoleOutput();
+$out->writeln("jeje");
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     $out = new \Symfony\Component\Console\Output\ConsoleOutput();
@@ -24,7 +25,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
     Route::group(['middleware' => ['jwt.verify']], function() {
         $ruta_controllers = "App\Http\Controllers\\" ;
-        
+        Route::post('/refresh', 'App\Http\Controllers\AuthController@refresh');
+        Route::post('/me', 'App\Http\Controllers\AuthController@me');
+        Route::post('/register', 'App\Http\Controllers\AuthController@register');  
     });
 
     Route::group([
@@ -37,9 +40,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
         $out->writeln("2");
         Route::post('/login', 'App\Http\Controllers\AuthController@login');
         Route::post('/logout', 'App\Http\Controllers\AuthController@logout');
-        Route::post('/refresh', 'App\Http\Controllers\AuthController@refresh');
-        Route::post('/me', 'App\Http\Controllers\AuthController@me');
-        Route::post('/register', 'App\Http\Controllers\AuthController@register');
+        
     
     });
 
