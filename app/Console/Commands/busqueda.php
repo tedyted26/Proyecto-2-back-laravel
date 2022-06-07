@@ -31,52 +31,63 @@ class busqueda extends Command
     public function handle()
     {
         $out = new \Symfony\Component\Console\Output\ConsoleOutput();
-        $textoBuscado = "Pontevedra";
+        #$textoBuscado = "Ourense";
 
-        $Busqueda = new Busquedas;
-        $Busqueda->lugar = $textoBuscado;
-        $Busqueda->visitas_totales = 0;
-        $Busqueda->resultado_odio = 0;
+        $provincias = ["A Coruña","Albacete","Alicante","Almería",
+        "Asturias","Álava","Ávila","Badajoz","Baleares","Barcelona","Burgos","Cantabria",
+        "Castellón","Ceuta","Ciudad Real","Cuenca","Cáceres","Cádiz",
+        "Córdoba","Girona","Granada","Guadalajara","Guipúzcoa","Huelva","Huesca","Jaén",
+        "La Rioja","Las Palmas","León","Lleida","Lugo","Madrid","Melilla","Murcia","Málaga",
+        "Navarra","Ourense","Palencia","Pontevedra","SC. Tenerife","Salamanca","Segovia","Sevilla",
+        "Soria","Tarragona","Teruel","Toledo","Valencia","Valladolid","Vizcaya","Zamora","Zaragoza"];
         
-
-        $readTweets = exec("python ./python-codes/ASTweets.py ".$textoBuscado);
-        $out->writeln($readTweets);
-        $json_tweets = json_decode($readTweets);
-        $out->writeln("Tweets decodificados correctamente");
-
-        $Tweets = new Twitter;
-        $Tweets->total_likes = $json_tweets->totalMg;
-        $Tweets->total_retweets = $json_tweets->totalRt;
-        $Tweets->numero_tweets = $json_tweets->tweetsAnalizados;
-        $Tweets->polaridad = $json_tweets->polaridadMedia;
-        $Tweets->subjetividad = $json_tweets->subjetividadMedia;
-
-        $out->writeln("Tweets Bien");
+        foreach ($provincias as &$provincia){
         
-        $textoBuscado = preg_replace('/\s+/', '', $textoBuscado);
-        $out->writeln($textoBuscado);
-        $readNews = exec("python ./python-codes/main_clasificador.py ".$textoBuscado);
-        if(!empty($readNews)){
-            $out->writeln($readNews);
-            $json_news = json_decode($readNews, true);
-            $out->writeln(gettype($json_news));
-            if($json_news != null){
-                $Busqueda->save();
-                $id = $Busqueda->id;
-                $Tweets->busquedas_id = $id;
-                $Tweets->save();
+            $Busqueda = new Busquedas;
+            $Busqueda->lugar = $provincia;
+            $Busqueda->visitas_totales = 0;
+            $Busqueda->resultado_odio = 0;
+            
 
-                foreach ($json_news as &$noticia) {
-                    $Noticia = new Noticias;
-                    $Noticia->url = $noticia["url"];
-                    $Noticia->titulo = $noticia["titulo"];
-                    $Noticia->subtitulo = $noticia["subtitulo"];
-                    $Noticia->resultado = $noticia["resultados"];
-                    $Noticia->fecha_noticia = "2022-01-01";
-                    $Noticia->busquedas_id = $id;
-                    $Noticia->save();
+            $readTweets = exec("python ./python-codes/ASTweets.py ".$provincia);
+            $out->writeln($readTweets);
+            $json_tweets = json_decode($readTweets);
+            $out->writeln("Tweets decodificados correctamente");
+
+            $Tweets = new Twitter;
+            $Tweets->total_likes = $json_tweets->totalMg;
+            $Tweets->total_retweets = $json_tweets->totalRt;
+            $Tweets->numero_tweets = $json_tweets->tweetsAnalizados;
+            $Tweets->polaridad = $json_tweets->polaridadMedia;
+            $Tweets->subjetividad = $json_tweets->subjetividadMedia;
+
+            $out->writeln("Tweets Bien");
+            
+            $provincia = preg_replace('/\s+/', '', $provincia);
+            $out->writeln($provincia);
+            $readNews = exec("python ./python-codes/main_clasificador.py ".$provincia);
+            if(!empty($readNews)){
+                $out->writeln($readNews);
+                $json_news = json_decode($readNews, true);
+                $out->writeln(gettype($json_news));
+                if($json_news != null){
+                    $Busqueda->save();
+                    $id = $Busqueda->id;
+                    $Tweets->busquedas_id = $id;
+                    $Tweets->save();
+
+                    foreach ($json_news as &$noticia) {
+                        $Noticia = new Noticias;
+                        $Noticia->url = $noticia["url"];
+                        $Noticia->titulo = $noticia["titulo"];
+                        $Noticia->subtitulo = $noticia["subtitulo"];
+                        $Noticia->resultado = $noticia["resultados"];
+                        $Noticia->fecha_noticia = "2022-01-01";
+                        $Noticia->busquedas_id = $id;
+                        $Noticia->save();
+                    }
+                    $out->writeln("FINALIZADO CORRECTAMENTE ".$provincia);
                 }
-                $out->writeln("FINALIZADO CORRECTAMENTE");
             }
         }
         

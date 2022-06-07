@@ -46,7 +46,7 @@ noticiasGlobales.extend(ETL_LaRazon.getLaRazonNews(busqueda)) #Va perfe
 
 noticiasGlobales.extend(ETL_Nacionales.getElMundoNews(busqueda)) #Va perfe
 
-noticiasGlobales.extend(ETL_Vanguardia.getLaVanguardiaNews(busqueda)) #Va a medias
+#noticiasGlobales.extend(ETL_Vanguardia.getLaVanguardiaNews(busqueda)) #Va a medias
 
 
 #-------------CLASIFICADOR-------------#
