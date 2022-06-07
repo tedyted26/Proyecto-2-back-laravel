@@ -17,7 +17,7 @@ def extractTweets(busqueda):
     auth = tweepy.AppAuthHandler(consumer_key, consumer_secret)
     api = tweepy.API(auth)
 
-    listaTweets = tweepy.Cursor(api.search_tweets, q=f'{busqueda} -filter:retweets').items(5)
+    listaTweets = tweepy.Cursor(api.search_tweets, q=f'{busqueda} -filter:retweets').items(50)
     listatextos = []
 
     fechaAyer = date.today() - timedelta(days=1)
