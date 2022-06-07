@@ -28,6 +28,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
         Route::post('/refresh', 'App\Http\Controllers\AuthController@refresh');
         Route::post('/me', 'App\Http\Controllers\AuthController@me');
         Route::post('/register', 'App\Http\Controllers\AuthController@register');  
+        Route::post('/getGraphics', 'App\Http\Controllers\AuthController@getAdminGraphicsData'); 
     });
 
     Route::group([
@@ -44,12 +45,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     
     });
 
-//Route::get('admins', $ruta_controllers.'AdminsController@index');
-//Route::post('admins', $ruta_controllers.'AdminsController@index2');
-//Route::get('admins/{id}', $ruta_controllers.'AdminsController@show');
-//Route::post('busquedas', $ruta_controllers.'BusquedasController@getSearch');
-//Route::get('busquedas', $ruta_controllers.'BusquedasController@index');
-//Route::get('busquedas/{id}', $ruta_controllers.'BusquedasController@show');
+
+
 Route::group(['middleware' => ['cors']], function () {
     $out = new \Symfony\Component\Console\Output\ConsoleOutput();
     $out->writeln("3");
