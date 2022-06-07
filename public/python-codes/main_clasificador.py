@@ -28,8 +28,10 @@ import re
 
     # para el resto de noticias que no existan, se completa el webscraping y se ejecuta el clasificador
 noticiasGlobales = []
-busqueda = "Albacete"#sys.argv[1]
+busqueda = sys.argv[1]
 numPaginas = 1
+busqueda = busqueda.lower()
+busqueda = busqueda.replace("í", "i").replace("á", "a").replace("é", "e").replace("ó", "o").replace("ú", "u").replace("ñ", "n")
 
 noticiasGlobales.extend(ETL_ABC.getABCNews(busqueda,numPaginas))
 
@@ -88,10 +90,9 @@ print(jsonString)
 '''
 jsonString = '['
 for noticia, resultado in listaNoticiasConResultadoClasificador:
-    for i in range(2):
-        titulo = re.sub(r'[^a-zA-Z0-9\s]', '', str(noticia.titulo))
-        subtitulo = re.sub(r'[^a-zA-Z0-9\s]', '', str(noticia.subtitulo))
-        jsonString += '{"url": "'+noticia.url +'","resultados":"'+str(resultado) +'","titulo":"'+titulo+'","subtitulo":"'+str(subtitulo)+'"},'
+    titulo = re.sub(r'[^a-zA-Z0-9\s]', '', str(noticia.titulo))
+    subtitulo = re.sub(r'[^a-zA-Z0-9\s]', '', str(noticia.subtitulo))
+    jsonString += '{"url": "'+noticia.url +'","resultados":"'+str(resultado) +'","titulo":"'+titulo+'","subtitulo":"'+str(subtitulo)+'"},'
 jsonString = jsonString[:-1]
 jsonString = jsonString + ']'
 #jsonString = '[{"resultados":"1"},{"resultados":"-1"}]'

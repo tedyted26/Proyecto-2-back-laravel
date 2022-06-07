@@ -102,8 +102,12 @@ def calculoSent(list_of_text, totalMg, totalRt, busqueda):
     #print("Tweets negativos: " + str(negativos))
     #print("Tweets positivos: " + str(positivos))
     #print("Tweets neutros: " + str(neutros))
+    try:
+        polaridadFinal = polaridadTotal/(negativos+positivos)
+    except:
+        polaridadFinal = 0
 
-    resultados = '{"busqueda": "'+busqueda+'", "tweetsAnalizados": '+str(len(list_of_text))+', "polaridadMedia": '+str(polaridadTotal/(negativos+positivos))+', "subjetividadMedia": '+str(subjetividadTotal/len(list_of_text))+', "totalMg": '+str(totalMg)+', "totalRt": '+str(totalRt)+'}'
+    resultados = '{"tweetsAnalizados": '+str(len(list_of_text))+', "polaridadMedia": '+str(polaridadFinal)+', "subjetividadMedia": '+str(subjetividadTotal/len(list_of_text))+', "totalMg": '+str(totalMg)+', "totalRt": '+str(totalRt)+'}'
     
     
     return resultados

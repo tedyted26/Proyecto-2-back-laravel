@@ -51,14 +51,15 @@ class BusquedasController extends Controller
             return $compound_json;
         }
         else{
-            $out->writeln("Localidad no encontrada en BBDD");
-/*
+            $out->writeln("Provincia no encontrada en BBDD");
+            
             $Busqueda = new Busquedas;
             $Busqueda->lugar = $textoBuscado;
             $Busqueda->visitas_totales = 0;
-            $Busqueda->resultado_odio = 0.5;
+            $Busqueda->resultado_odio = 0;
+            $Busqueda->save();
             $id = $Busqueda->id;
-        
+
             $readTweets = exec("python ./python-codes/ASTweets.py ".$textoBuscado);
             $out->writeln($readTweets);
             $json_tweets = json_decode($readTweets);
@@ -70,26 +71,49 @@ class BusquedasController extends Controller
             $Tweets->polaridad = $json_tweets->polaridadMedia;
             $Tweets->subjetividad = $json_tweets->subjetividadMedia;
             $Tweets->busquedas_id = $id;
-            */
-            $readNews = exec("python ./python-codes/main_clasificador.py ".$textoBuscado);
-            //$array = array($readNews);
-            //$out->writeln($array[0]);
-            #$readNews = '[{"url": "https://www.abc.es/cultura/abci-esculturas-tutankamon-mapas-parques-naturales-discos-legion-y-facsimiles-miles-euros-retiro-mucho-mas-libros-202206050230_noticia.html", "titulo": "De esculturas de Tutankamn, mapas de parques naturales, discos de la Legin y facsmiles de miles de euros, en El Retiro hay mucho ms que libros", "subtitulo": "La Feria del Libro de Madrid ofrece tesoros y objetos muy curiosos que van ms all de las novelas, los cmics o la poesa", "fecha_noticia": "2022-06-06T16:05:10Z", "resultados": "1"}, {"url": "https://www.abc.es/economia/abci-creemos-mercado-espanol-y-si-contemplariamos-mas-compras-afirma-grupo-helvetia-202206050311_noticia.html", "titulo": "Creemos en el mercado espaol y s contemplaramos ms compras, afirma el CEO del grupo Helvetia", "subtitulo": "Philipp Gmr augura un futuro prometedor a Caser y seala que no se plantean hacer desaparecer la marca", "fecha_noticia": "2022-06-06T16:38:58Z", "resultados": "-1"}, {"url": "https://www.abc.es/economia/abci-iberia-asegura-no-tendra-influencia-gestion-europa-adquiera-20-por-ciento-compania-202206021625_noticia.html", "titulo": "Iberia asegura que no tendr influencia en la gestin de Air Europa una vez adquiera el 20% de la compaa", "subtitulo": "La compaa espera volver a la rentabilidad este trimestre y asegura que la subida del precio del combustible no tendr gran repercusin en los billetes", "fecha_noticia": "2022-06-02T21:03:57Z", "resultados": "-1"}, {"url": "https://www.abc.es/sociedad/abci-como-funciona-metro-sin-conductor-anunciado-ayuso-para-madrid-y-donde-esta-implantado-202205121411_noticia.html", "titulo": "Cmo funciona el metro sin conductor que ha anunciado Ayuso para Madrid y dnde est implantado", "subtitulo": "Asia es la regin del mundo con ms metros automatizados, con un 50%.", "fecha_noticia": "2022-06-06T14:38:04Z", "resultados": "-1"}, {"url": "https://www.abc.es/gente/abci-johnny-depp-y-kate-moss-vuelven-enamorar-202206040419_noticia.html", "titulo": "Johnny Depp y Kate Moss se vuelven a enamorar", "subtitulo": "Fueron la pareja memorable de los noventa, y acabaron tan bien que ahora ella ha declarado en el juicio reality, y luego se ha ido de juerga con el actor", "fecha_noticia": "2022-06-06T14:01:23Z", "resultados": "-1"}]';
-            #utf8_encode($readNews);
-            $out->writeln($readNews);
-            #$readNews = stripslashes(html_entity_decode($readNews));
-            $json_news = json_decode($readNews, true);
-            #$out->writeln(gettype($json_news));
-            foreach ($json_news as &$noticia) { 
-                $out->writeln($noticia["resultados"]);
-                $out->writeln($noticia["url"]);
-                $out->writeln($noticia["titulo"]);
-                $out->writeln($noticia["subtitulo"]);
-            }
-/*
-            $Busqueda->save();
             $Tweets->save();
+            $out->writeln("Tweets Bien");
+            
+            $textoBuscado = preg_replace('/\s+/', '', $textoBuscado);
+
+            $readNews = exec("python ./python-codes/main_clasificador.py ".$textoBuscado);
+            $out->writeln($readNews);
+            $json_news = json_decode($readNews, true);
+
+            foreach ($json_news as &$noticia) {
+                $Noticia = new Noticias;
+                $Noticia->url = $noticia["url"];
+                $Noticia->titulo = $noticia["titulo"];
+                $Noticia->subtitulo = $noticia["subtitulo"];
+                $Noticia->resultado = $noticia["resultados"];
+                $Noticia->fecha_noticia = "2022-01-01";
+                $Noticia->busquedas_id = $id;
+                $Noticia->save();
+            }
+            
+            /*
+
+            foreach ($json_news as &$noticia) { 
+                $Noticia = new Noticias;
+                $Noticia->url = $noticia["url"];
+                $out->writeln($noticia["url"]);
+                $Noticia->titulo = $noticia["titulo"];
+                $out->writeln($noticia["titulo"]);
+                $Noticia->subtitulo = $noticia["subtitulo"];
+                $out->writeln($noticia["subtitulo"]);
+                $Noticia->fecha = "2022-01-01";
+                $out->writeln($Noticia->fecha);
+                $Noticia->resultado = $noticia["resultados"];
+                $out->writeln($noticia["resultados"]);
+                $Noticia->busquedas_id = 1;
+                $out->writeln($Noticia->busquedas_id);
+                $Noticia->save();
+                $out->writeln("TODO BIEN");
+            }
             */
+            
+            
+
             /*
             error_reporting(E_ALL);
             ini_set('display_errors', 1);
