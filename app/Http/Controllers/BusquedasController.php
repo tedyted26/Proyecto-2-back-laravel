@@ -82,6 +82,9 @@ class BusquedasController extends Controller
             #$out->writeln(gettype($json_news));
             foreach ($json_news as &$noticia) { 
                 $out->writeln($noticia["resultados"]);
+                $out->writeln($noticia["url"]);
+                $out->writeln($noticia["titulo"]);
+                $out->writeln($noticia["subtitulo"]);
             }
 /*
             $Busqueda->save();

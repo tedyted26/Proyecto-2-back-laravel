@@ -19,7 +19,7 @@ def getABCNews(categoria: String, paginas = 1):
 
         resultados = soup.find(id="results-content")
         
-        for li in resultados.findAll("li")[:2]:
+        for li in resultados.findAll("li"):
             link = li.find("a")["href"]
             html_noticia = ""
             try:
@@ -46,14 +46,10 @@ def getABCNews(categoria: String, paginas = 1):
                 listaCOM = cuerpo.findAll(class_="gig-comment-body")
                 #Los comentarios no funcionan porque se carga dinamicamente
                 #comentarios = [x.text for x in cuerpo.findAll(class_="gig-comment-body")]
-                
+
                 noticia = Noticia(titulo, subtitulo, fecha, link, categoria, "ABC", tags, texto)
                 listaNoticias.append(noticia)
                 #print(titulo,link, "\n----\n") 
     return listaNoticias
-'''
-news = getABCNews("Albacete", paginas = 1)
 
-for noticia in news:
-    print(noticia.titulo)
-'''
+

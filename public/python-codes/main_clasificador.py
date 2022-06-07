@@ -88,9 +88,10 @@ print(jsonString)
 '''
 jsonString = '['
 for noticia, resultado in listaNoticiasConResultadoClasificador:
-    for i in range(40):
-        titulo = re.sub(r'[^a-zA-Zá-úÁ-Ú0-9\s]', '', noticia.titulo)
-        jsonString += '{"url": "'+noticia.url +'","resultados":"'+str(resultado) +'"},'
+    for i in range(2):
+        titulo = re.sub(r'[^a-zA-Z0-9\s]', '', str(noticia.titulo))
+        subtitulo = re.sub(r'[^a-zA-Z0-9\s]', '', str(noticia.subtitulo))
+        jsonString += '{"url": "'+noticia.url +'","resultados":"'+str(resultado) +'","titulo":"'+titulo+'","subtitulo":"'+str(subtitulo)+'"},'
 jsonString = jsonString[:-1]
 jsonString = jsonString + ']'
 #jsonString = '[{"resultados":"1"},{"resultados":"-1"}]'
