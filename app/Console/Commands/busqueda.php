@@ -27,6 +27,45 @@ class busqueda extends Command
      */
     public function handle()
     {
+        $textoBuscado = "Madrid";
+
+        $Busqueda = new Busquedas;
+        $Busqueda->lugar = $textoBuscado;
+        $Busqueda->visitas_totales = 0;
+        $Busqueda->resultado_odio = 0;
+        $Busqueda->save();
+        $id = $Busqueda->id;
+
+        $readTweets = exec("python ./python-codes/ASTweets.py ".$textoBuscado);
+        $out->writeln($readTweets);
+        $json_tweets = json_decode($readTweets);
+
+        $Tweets = new Twitter;
+        $Tweets->total_likes = $json_tweets->totalMg;
+        $Tweets->total_retweets = $json_tweets->totalRt;
+        $Tweets->numero_tweets = $json_tweets->tweetsAnalizados;
+        $Tweets->polaridad = $json_tweets->polaridadMedia;
+        $Tweets->subjetividad = $json_tweets->subjetividadMedia;
+        $Tweets->busquedas_id = $id;
+        $Tweets->save();
+        $out->writeln("Tweets Bien");
+        
+        $textoBuscado = preg_replace('/\s+/', '', $textoBuscado);
+
+        $readNews = exec("python ./python-codes/main_clasificador.py ".$textoBuscado);
+        $out->writeln($readNews);
+        $json_news = json_decode($readNews, true);
+
+        foreach ($json_news as &$noticia) {
+            $Noticia = new Noticias;
+            $Noticia->url = $noticia["url"];
+            $Noticia->titulo = $noticia["titulo"];
+            $Noticia->subtitulo = $noticia["subtitulo"];
+            $Noticia->resultado = $noticia["resultados"];
+            $Noticia->fecha_noticia = "2022-01-01";
+            $Noticia->busquedas_id = $id;
+            $Noticia->save();
+        }
         return 0;
     }
 }
