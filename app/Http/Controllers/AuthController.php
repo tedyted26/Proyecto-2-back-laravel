@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
+use App\Models\Busquedas;
 
 
 
@@ -39,6 +40,38 @@ class AuthController extends Controller
         return $this->respondWithToken($token);
     }
 
+    public function getAdminGraphicsData()
+    {
+        $out = new \Symfony\Component\Console\Output\ConsoleOutput();
+        $out->writeln("Entrando a graficos");
+        $lista_prov = ["A Coruña","Albacete","Alicante","Almería",
+        "Asturias","Álava","Ávila","Badajoz","Baleares","Barcelona","Burgos","Cantabria",
+        "Castellón","Ceuta","Ciudad Real","Cuenca","Cáceres","Cádiz",
+        "Córdoba","Girona","Granada","Guadalajara","Guipúzcoa","Huelva","Huesca","Jaén",
+        "La Rioja","Las Palmas","León","Lleida","Lugo","Madrid","Melilla","Murcia","Málaga",
+        "Navarra","Ourense","Palencia","Pontevedra","SC. Tenerife","Salamanca","Segovia","Sevilla",
+        "Soria","Tarragona","Teruel","Toledo","Valencia","Valladolid","Vizcaya","Zamora","Zaragoza"];
+        $out->writeln("pre for");
+        $lista_res = [];
+
+        $out->writeln("minibusqueda");
+        foreach ($lista_prov as $prov){
+            try{
+                $out->writeln($prov);
+                $busqueda_q = Busquedas::select('*')->where("lugar", $prov)->orderBy('id', 'desc')->first();
+                $out->writeln("medio post query");
+                array_push($lista_res, $busqueda_q);
+                $out->writeln("sale");
+            }catch(Exception $ex){
+                $out->writeln("error");
+            }
+        };
+        $out->writeln("post for");
+        $out->writeln($lista_res);
+        return  json_encode($lista_res);
+       
+        
+    }
     /**
      * Get the authenticated User.
      *
