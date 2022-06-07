@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use App\Models\Busquedas;
+use App\Models\Noticias;
 
 
 
@@ -53,6 +54,7 @@ class AuthController extends Controller
         "Soria","Tarragona","Teruel","Toledo","Valencia","Valladolid","Vizcaya","Zamora","Zaragoza"];
         $out->writeln("pre for");
         $lista_res = [];
+        $lista_odio = [];
 
         $out->writeln("minibusqueda");
         foreach ($lista_prov as $prov){
@@ -62,13 +64,31 @@ class AuthController extends Controller
                 $out->writeln("medio post query");
                 array_push($lista_res, $busqueda_q);
                 $out->writeln("sale");
+
+
+                if ($busqueda_q != NULL){
+                    $cuenta = Noticias::select('*')->where("busquedas_id", $busqueda_q->id)->count();
+                }else{
+                    $cuenta = 0;
+                }
+                
+
+                array_push($lista_odio, $cuenta);
+
             }catch(Exception $ex){
                 $out->writeln("error");
             }
         };
-        $out->writeln("post for");
+
         $out->writeln($lista_res);
-        return  json_encode($lista_res);
+
+        $json_res = $lista_res;
+
+        $json_odio = $lista_odio;
+
+        $compound_json = json_encode(array("localidad" =>  $json_res, "odio" => $json_odio));
+
+        return  $compound_json;
        
         
     }
