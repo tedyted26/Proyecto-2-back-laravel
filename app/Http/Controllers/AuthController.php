@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use App\Models\Busquedas;
 use App\Models\Noticias;
+use App\Models\Config;
 
 
 
@@ -148,5 +149,22 @@ class AuthController extends Controller
             'message'=>'Usuario registrado correctamente',
             'user'=> $user
         ], 201);
+    }
+    public function modData(Request $request)
+    {
+        $out = new \Symfony\Component\Console\Output\ConsoleOutput();
+        $out->writeln($request);
+
+        $Config = Config::find(1);
+        $Config->contact_mail = $request->input('email');
+        $Config->contact_num = $request->input('tlf');
+        $Config->is_abc = 1;
+        $Config->is_20min = 1;
+        $Config->is_elmundo = 1;
+        $Config->is_lasexta = 1;
+        $Config->is_lavang = 1;
+        $Config->is_larazon = 1;
+        $Config->save();
+
     }
 }

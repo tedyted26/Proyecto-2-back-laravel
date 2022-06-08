@@ -27,7 +27,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
         $ruta_controllers = "App\Http\Controllers\\" ;
         Route::post('/refresh', 'App\Http\Controllers\AuthController@refresh');
         Route::post('/me', 'App\Http\Controllers\AuthController@me');
-        Route::post('/register', 'App\Http\Controllers\AuthController@register');  
+        Route::post('/register', 'App\Http\Controllers\AuthController@register');
+        Route::post('/moddata', 'App\Http\Controllers\AuthController@modData');  
         Route::post('/getGraphics', 'App\Http\Controllers\AuthController@getAdminGraphicsData'); 
     });
 

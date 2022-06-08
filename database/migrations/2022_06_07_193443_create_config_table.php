@@ -23,6 +23,7 @@ return new class extends Migration
             $table->integer("is_lasexta");
             $table->integer("is_lavang");
             $table->integer("is_larazon");
+            $table->timestamps();
         });
     }
 
